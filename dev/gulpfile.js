@@ -2,20 +2,17 @@ var projectName = 'Project Name';
 
 var gulp = require('gulp');
 var autoprefix = require('gulp-autoprefixer');
-var sass = require('gulp-ruby-sass');
+var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var notify = require('gulp-notify');
-var livereload = require('gulp-livereload');
+var browserSync = require('browser-sync');
 
 var sassDir = 'scss';
 var targetCSSDir = '../css';
 
 var jsDir = 'js';
 var targetJSDir = '../js';
-
-var imgDir = 'img';
-var targetImgDir = '../img';
 
 gulp.task('css', function() {
 	return gulp.src(sassDir + '/style.scss')
@@ -35,12 +32,27 @@ gulp.task('js', function() {
     .pipe(notify(projectName + ' Javascript Updated!'))
 });
 
-gulp.task('watch', function() {
-	gulp.watch(sassDir + '/*.scss', ['css']);
-	gulp.watch(targetCSSDir + '/*.css').on('change', livereload.changed);
-	gulp.watch(jsDir + '/*.js', ['js']);
-	gulp.watch(targetJSDir + '/*.js').on('change', livereload.changed);
-
+gulp.task('browser-sync', function() {
+    browserSync({
+        server : {
+			baseDir: '../'
+        },
+        ghostMode: false
+    });
 });
 
-gulp.task('default', ['css', 'js', 'watch']);
+gulp.task('watch', function() {
+	gulp.watch(sassDir + '/*.scss', ['css']);
+	gulp.watch(targetCSSDir + '/*.css').on('change', function() {
+		browserSync.reload();
+	});
+	gulp.watch(jsDir + '/*.js', ['js']);
+	gulp.watch(targetJSDir + '/*.js').on('change', function() {
+		browserSync.reload();
+	});
+	gulp.watch('../**/*.html').on('change', function() {
+		browserSync.reload();
+	});
+});
+
+gulp.task('default', ['css', 'js', 'browser-sync', 'watch']);
