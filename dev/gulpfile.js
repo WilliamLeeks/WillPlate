@@ -34,10 +34,7 @@ gulp.task('js', function() {
 
 gulp.task('browser-sync', function() {
     browserSync({
-        server : {
-			baseDir: '../'
-        },
-        ghostMode: false
+    	proxy: 'localhost'
     });
 });
 
