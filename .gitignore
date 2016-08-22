@@ -38,5 +38,10 @@ Thumbs.db
 
 # Node Modules #
 ################
-
 dev/node_modules
+
+# Gulp Generated Files #
+########################
+
+css/*
+js/*
